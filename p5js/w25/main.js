@@ -1,11 +1,19 @@
 const MODE = {
     RANDOM: 0,
-    DIRCTIONAL: 1
+    DIRCTIONAL: 1,
+    SPRING: 2,
 }
 Object.freeze(MODE);
 
 let mode = 0;
 const ellipses = []
+
+const RADIUS_MIN = 400;
+const RADIUS_MAX = 650;
+const TRANSLATE_MIN = -25;
+const TRANSLATE_MAX = 25;
+const WIDTH_MIN = 1;
+const WIDTH_MAX = 40;
 
 function createEllipses(radiusMin, radiusMax, translateMin, translateMax, widthMin, widthMax) {
     return {
@@ -19,7 +27,7 @@ function setup() {
     createCanvas(window.innerWidth, window.innerHeight);
 
     for(let i = 0; i < 25; i++) {
-        ellipses.push(createEllipses(450, 650, -25, 25, 1, 40))
+        ellipses.push(createEllipses(RADIUS_MIN, RADIUS_MAX, TRANSLATE_MIN, TRANSLATE_MAX, WIDTH_MIN, WIDTH_MAX));
     }
 }
 
@@ -27,7 +35,7 @@ function draw() {
     background(255);
     translate(windowWidth / 2, windowHeight / 2);
 
-    const mouseCooords = { 
+    const mouseCoords = { 
         x: (windowWidth / 2 - mouseX) / windowWidth,
         y: (windowHeight / 2 - mouseY) / windowHeight }
 
@@ -40,13 +48,16 @@ function draw() {
         strokeWeight(e.width)
         switch(mode) {
             case MODE.RANDOM:
-                ellipse(e.center.x * mouseCooords.x * 8, e.center.y * mouseCooords.y * 8, e.radius)    
+                ellipse(e.center.x * mouseCoords.x * 8, e.center.y * mouseCoords.y * 8, e.radius)    
                 break;
             case MODE.DIRCTIONAL:
+                const range = (RADIUS_MAX - e.radius - e.width * 0.5) * 0.5
                 ellipse(
-                    e.center.x + mouseCooords.x * (Math.pow(i * 1.2, 1.8) * -1),
-                    e.center.y + mouseCooords.y * (Math.pow(i * 1.2, 1.8) * -1),
+                    constrain(mouseCoords.x * (75 + i) * -2, -range, range),
+                    constrain(mouseCoords.y * (75 + i) * -2, -range, range),
                     e.radius)
+                break;
+            case MODE.SPRING:
                 break;
         }
     }
@@ -61,9 +72,11 @@ function draw() {
             case MODE.DIRCTIONAL:
                 message = "MODE: DIRECTIONAL"
                 break;
+            case MODE.SPRING:
+                message = "MODE: SPRING";
+                break;
         }
         messageElement.textContent = message;
-        console.log(messageElement.textContent)
     }
 }
 
@@ -72,6 +85,10 @@ function windowResized() {
 }
 
 function keyPressed(){
-    mode++;
-    mode %= 2;
+    if(key === "Enter"){
+        window.location.reload();
+    }else{
+        mode++;
+        mode %= 3;
+    }
 }
