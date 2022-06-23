@@ -58,6 +58,10 @@ function draw() {
                     e.radius)
                 break;
             case MODE.SPRING:
+                ellipse(
+                    e.center.x + mouseCoords.x * (Math.pow(i * 1.2, 1.8) * -1),
+                    e.center.y + mouseCoords.y * (Math.pow(i * 1.2, 1.8) * -1),
+                    e.radius)
                 break;
         }
     }
