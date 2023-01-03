@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-const MAX_RESOLUTION_RING = 96;
+const MAX_RESOLUTION_RING = 64;
 const MIN_RESOLUTION_RING = 32;
 
 export function createRing(innerRadius: number, outerRadius: number, thetaLength: number, baseColor: THREE.Color): THREE.Mesh {
